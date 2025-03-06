@@ -18,7 +18,7 @@ quantile_weibull <- function(p, lambda, k) {
 }
 # Quantile sequence
 tau_seq <- seq(0.01, 0.99, length.out = 100)
-# Generate Y_0 quantiles
+# Y_0 quantiles
 Q_Y0 <- quantile_weibull(tau_seq, lambda_0, k_0)
 # Program A: parameters and Y_1 quantiles
 lambda_A <- lambda_0 * 1.2  
@@ -125,10 +125,8 @@ fit <- drbart(y,
               nburn = 2000,
               nsim = 2000,
               variance = "const")
-
 xpred <- matrix(seq(min(x), max(x), length.out = 20))
 ygrid <- seq(min(y), max(y), length.out = 100)
-
 preds <- predict(fit, 
                  xpred, 
                  ygrid,
@@ -137,12 +135,12 @@ preds <- predict(fit,
 get_quantile <- function(cdf, grid, probs) {
   sapply(probs, function(p) grid[which.min(abs(cdf - p))])
 }
-# Compute posterior mean of CDF estimates
+# Posterior mean of CDF estimates
 cdf_mean <- apply(preds$preds, c(1,2), mean)  
-# Compute conditional quantiles 
+# Conditional quantiles 
 quantiles<- apply(cdf_mean, 1, function(cdf) get_quantile(cdf, ygrid, taus))
 quantiles <- t(quantiles) 
-# Apply smoothing spline to each quantile curve
+# Smoothing spline applied to each quantile curve
 smoothed_quantiles <- apply(quantiles, 2, function(q) {
   smooth.spline(xpred, q, spar = 0.35)$y  # Adjust `spar` for smoothness
 })
@@ -168,4 +166,3 @@ plot_smooth_drbart <- ggplot() +
     legend.margin = margin(5,5,5,5) 
   ) 
 print(plot_smooth_drbart)
-
