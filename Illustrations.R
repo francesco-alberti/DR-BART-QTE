@@ -40,6 +40,7 @@ x_vals <- seq(0, 10, length.out = 500)
 cdf_Y0 <- cdf_weibull(x_vals, lambda_0, k_0)
 cdf_Y1_A <- cdf_weibull(x_vals, lambda_A, k_A)
 cdf_Y1_B <- cdf_weibull(x_vals, lambda_B, k_B)
+
 # Plot true CDFs for Program A and Program B, separate plots
 df_CDF_A <- data.frame(X = x_vals, Y0 = cdf_Y0, Y1_A = cdf_Y1_A)
 df_CDF_B <- data.frame(X = x_vals, Y0 = cdf_Y0, Y1_B = cdf_Y1_B)
@@ -86,7 +87,7 @@ print(plot_QTE_ATE)
 
 ###################### ILLUSTRATION 2: quantile crossing - quantreg vs dr-bart ###################
 set.seed(999)
-# Dataset
+# Data generation 
 n <- 50
 x <- sort(runif(n, 0, 10))  
 y <- 3 + sin(2*x) - 0.2*x^2 + rnorm(n, sd = 5)
@@ -98,6 +99,7 @@ taus <- c(0.4, 0.5, 0.6)
 models <- lapply(taus, function(tau) rq(y ~ bs(x, df = 5), tau = tau))  
 x_pred <- seq(min(x), max(x), length.out = 100) 
 preds_qr <- sapply(models, function(model) predict(model, newdata = data.frame(x = x_pred)))
+                  
 # Plot conditional quantiles estimated via B-Spline quantile regression
 pred_df_qr <- data.frame(x = rep(x_pred, times = length(taus)),
                          y = as.vector(preds_qr),
@@ -117,6 +119,7 @@ plot_quantreg <- ggplot() +
     legend.background = element_rect(fill = "white", color = "white"), 
     legend.margin = margin(5,5,5,5)  
   )   
+                   
 print(plot_quantreg)
                    
 #------ DR-BART ------
@@ -138,12 +141,13 @@ get_quantile <- function(cdf, grid, probs) {
 # Posterior mean of CDF estimates
 cdf_mean <- apply(preds$preds, c(1,2), mean)  
 # Conditional quantiles 
-quantiles<- apply(cdf_mean, 1, function(cdf) get_quantile(cdf, ygrid, taus))
+quantiles <- apply(cdf_mean, 1, function(cdf) get_quantile(cdf, ygrid, taus))
 quantiles <- t(quantiles) 
 # Smoothing spline applied to each quantile curve
 smoothed_quantiles <- apply(quantiles, 2, function(q) {
   smooth.spline(xpred, q, spar = 0.35)$y  # Adjust `spar` for smoothness
 })
+                   
 # Plot smoothed conditional quantiles estimated via dr-bart
 smoothed_pred_df <- data.frame(
   x = rep(xpred, times = length(taus)),
@@ -165,4 +169,5 @@ plot_smooth_drbart <- ggplot() +
     legend.background = element_rect(fill = "white", color = "white"), 
     legend.margin = margin(5,5,5,5) 
   ) 
+                   
 print(plot_smooth_drbart)
