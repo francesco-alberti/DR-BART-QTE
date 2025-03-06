@@ -85,7 +85,7 @@ print(plot_CDF_A)
 print(plot_CDF_B)  
 print(plot_QTE_ATE) 
 
-###################### ILLUSTRATION 2: quantile crossing - quantreg vs dr-bart ###################
+###################### ILLUSTRATION 2: quantile crossing - quantreg vs DR-BART ###################
 set.seed(999)
 # Data generation 
 n <- 50
