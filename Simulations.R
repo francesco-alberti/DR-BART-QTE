@@ -864,7 +864,7 @@ plot_QTE_drbart3 <- ggplot(qte_drbart_df, aes(x = tau, y = QTE)) +
 
 print(plot_QTE_drbart3)
 
-#------ Firpo 2007 CQTE with CI ------
+#------ Firpo CQTE with CI ------
 df_0 <- subset(df, X == 0, select = c(D, Y))
 df_1 <- subset(df, X == 1, select = c(D, Y))
 df_2 <- subset(df, X == 2, select = c(D, Y))
@@ -922,7 +922,7 @@ plot_CQTE_Firpo_CI <- ggplot(cqte_Firpo_df, aes(x = tau, y = QTE, color = Educat
   )   
 
 print(plot_CQTE_Firpo_CI)
-#------ Firpo 2007 QTE with CI ------ 
+#------ Firpo QTE with CI ------ 
 Firpo <- ci.qte(Y ~ D,
                 xformla=~X,
                 data=df,
