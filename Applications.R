@@ -1,3 +1,11 @@
+library(drbart)     
+library(ggplot2)     
+library(qte)         
+library(tidyverse)  
+library(dplyr)       
+library(reshape2)         
+library(weights)
+
 ###################### APPLICATION 1: randomized experiment DR-BART QTE Lalonde (1986) ######################  
 #------ Dataset -------
 # Experimental part of Lalonde dataset
